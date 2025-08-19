@@ -46,12 +46,14 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static User from(SignUpRequestDto dto, String encodedPassword) {
+    public static User from(String username, String password, String email, UserRole role) {
         return User.builder()
-            .username(dto.getUsername())
-            .password(encodedPassword)
-            .email(dto.getEmail())
-            .role(dto.getRole()) // 기본 USER
-            .build();
+                .username(username)
+                .password(password)
+                .email(email)
+                .role(role != null ? role : UserRole.USER)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
     }
 }
