@@ -1,5 +1,6 @@
 package com.example.echobeat.common.security;
 
+import com.example.echobeat.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
