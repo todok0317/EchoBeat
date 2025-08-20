@@ -56,4 +56,19 @@ public class User {
                 .updatedAt(LocalDateTime.now())
                 .build();
     }
+
+    public void updateEmail(String email) {
+        this.email = email;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
