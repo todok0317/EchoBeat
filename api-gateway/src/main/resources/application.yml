@@ -1,0 +1,96 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # User Service 라우팅
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**, /api/auth/**
+          filters:
+            - StripPrefix=1
+        
+        # Music Service 라우팅 (향후 추가)
+        - id: music-service
+          uri: lb://music-service
+          predicates:
+            - Path=/api/music/**, /api/charts/**
+          filters:
+            - StripPrefix=1
+        
+        # Favorite Service 라우팅 (향후 추가)
+        - id: favorite-service
+          uri: lb://favorite-service
+          predicates:
+            - Path=/api/favorites/**
+          filters:
+            - StripPrefix=1
+        
+        # Search Service 라우팅 (향후 추가)
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - StripPrefix=1
+      
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 
+              - "http://localhost:3000"
+              - "http://localhost:3001"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allow-credentials: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+# JWT 설정 (토큰 검증용)
+jwt:
+  secret:
+    key: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5nQm9vdEpXVFRva2VuU2VjcmV0S2V5
+
+# Eureka Client 설정
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+
+# Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,gateway
+  endpoint:
+    health:
+      show-details: always
+
+# Logging 설정
+logging:
+  level:
+    com.echobeat: DEBUG
+    org.springframework.cloud.gateway: DEBUG

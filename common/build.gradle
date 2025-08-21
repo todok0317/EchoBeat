@@ -1,0 +1,34 @@
+dependencies {
+    // Spring Boot Core
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    // JWT 관련 의존성
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    
+    // Monitoring
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    
+    // Database
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+// JAR 파일로 빌드 (실행 가능한 JAR가 아님)
+jar {
+    enabled = true
+}
+
+bootJar {
+    enabled = false
+}
