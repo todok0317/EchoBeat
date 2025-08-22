@@ -1,1 +1,12 @@
 rootProject.name = 'EchoBeat'
+
+// MSA 서비스 모듈들
+include 'common'
+include 'eureka-server'
+include 'api-gateway'
+include 'user-service'
+include 'music-service'
+include 'favorite-service'
+include 'search-service'
+
+// 기존 echobeat-msa 폴더의 모듈들은 루트로 이동할 예정
