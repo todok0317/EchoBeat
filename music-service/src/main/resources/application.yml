@@ -6,9 +6,9 @@ spring:
     name: music-service
   
   datasource:
-    url: jdbc:mysql://localhost:3306/echobeat_music?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3308/echobeat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
-    password: password
+    password: 123456789
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
@@ -44,3 +44,10 @@ management:
 logging:
   level:
     com.echobeat: DEBUG
+
+# JWT 설정
+jwt:
+  secret:
+    key: bXlTZWNyZXRLZXlGb3JEZXZlbG9wbWVudFRoYXRTaG91bGRCZUF0TGVhc3QzMkNoYXJhY3RlcnNMb25n
+  access-token-expiration: 7200000  # 2시간
+  refresh-token-expiration: 1209600000  # 14일

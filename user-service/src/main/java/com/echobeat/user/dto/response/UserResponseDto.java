@@ -3,11 +3,13 @@ package com.echobeat.user.dto.response;
 import com.echobeat.user.entity.User;
 import com.echobeat.user.enums.UserRole;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class UserResponseDto {
 
     private Long id;

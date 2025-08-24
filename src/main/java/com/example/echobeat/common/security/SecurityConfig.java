@@ -38,7 +38,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/admin/**").hasRole("ADMIN");
                 auth.anyRequest().authenticated();
             })
-            .headers(headers -> headers.frameOptions().disable())
+            .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
             .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();

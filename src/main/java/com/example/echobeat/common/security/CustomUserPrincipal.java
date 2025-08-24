@@ -4,6 +4,7 @@ package com.example.echobeat.common.security;
 import com.example.echobeat.domain.user.entity.User;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,9 +19,7 @@ public class CustomUserPrincipal implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-            .toList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
