@@ -6,6 +6,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,7 +30,7 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     List<Track> findByArtistNameContainingIgnoreCase(String artistName);
 
     // 장르별 곡 조회
-    List<Track> findByGenreOrderByCreatedAtDesc(Genre genre);
+    Page<Track> findByGenreOrderByCreatedAtDesc(Genre genre, Pageable pageable);
 
     // 제목 + 아티스트로 중복 체크 (크롤링할 때 사용)
     Optional<Track> findByTitleAndArtistName(String title, String artistName);
