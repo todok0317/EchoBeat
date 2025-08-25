@@ -6,9 +6,9 @@ spring:
     name: user-service
   
   datasource:
-    url: jdbc:mysql://localhost:3306/echobeat_user?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3308/echobeat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
-    password: password
+    password: 123456789
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
@@ -27,11 +27,18 @@ spring:
       host: localhost
       port: 6379
       timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
 
 # JWT 설정
 jwt:
   secret:
-    key: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5nQm9vdEpXVFRva2VuU2VjcmV0S2V5
+    key: bXlTZWNyZXRLZXlGb3JEZXZlbG9wbWVudFRoYXRTaG91bGRCZUF0TGVhc3QzMkNoYXJhY3RlcnNMb25n
+  access-token-expiration: 7200000  # 2시간
+  refresh-token-expiration: 1209600000  # 14일
 
 # Eureka Client 설정
 eureka:

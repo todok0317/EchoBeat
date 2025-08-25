@@ -2,6 +2,7 @@ package com.echobeat.common.security;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,7 @@ public class CustomUserPrincipal implements UserDetails, Principal {
     public static CustomUserPrincipal create(Long id, String username, String password, Collection<String> roles) {
         Collection<GrantedAuthority> authorities = roles.stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+            .map(GrantedAuthority.class::cast)
             .toList();
         
         return new CustomUserPrincipal(id, username, password, authorities);
