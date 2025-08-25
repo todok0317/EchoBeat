@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Genre {
-    KPOP("K-Pop"),
-    JPOP("J-Pop"),
-    MIXED("Mixed");
+public enum Country {
+    KR("Korea"),
+    JP("Japan"),
+    GLOBAL("Global");
 
     private final String displayName;
 }
