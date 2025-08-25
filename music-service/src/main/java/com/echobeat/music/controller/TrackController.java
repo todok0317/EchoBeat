@@ -1,5 +1,6 @@
 package com.echobeat.music.controller;
 
+import com.echobeat.music.dto.request.TrackSearchRequestDto;
 import com.echobeat.music.dto.response.TrackDetailResponseDto;
 import com.echobeat.music.dto.response.TrackListResponseDto;
 import com.echobeat.music.enums.Genre;
@@ -7,11 +8,13 @@ import com.echobeat.music.service.TrackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +47,15 @@ public class TrackController {
         @Parameter(description = "페이지 크기") @RequestParam(defaultValue = "30") int size
     ) {
         TrackListResponseDto responseDto = trackService.getTracksByGenre(genre, page, size);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // 트랙 검색 (제목 + 아티스트)
+    @Operation(summary = "트랙 검색", description = "제목이나 아티스트명으로 트랙을 검색합니다.")
+    @GetMapping("/search")
+    public ResponseEntity<TrackListResponseDto> searchTracks(
+        @Valid @RequestBody TrackSearchRequestDto requestDto) {
+        TrackListResponseDto responseDto = trackService.searchTracks(requestDto);
         return ResponseEntity.ok(responseDto);
     }
 

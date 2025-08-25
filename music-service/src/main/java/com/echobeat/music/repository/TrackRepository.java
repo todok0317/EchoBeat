@@ -48,4 +48,10 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     @Query("SELECT t FROM Track t WHERE t.genre = :genre ORDER BY t.createdAt DESC")
     List<Track> findRecentTracksByGenre(@Param("genre") Genre genre,
         org.springframework.data.domain.Pageable pageable);
+
+    // 전체 검색 (제목 + 아티스트)
+    @Query("SELECT t FROM Track t WHERE " +
+        "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+        "LOWER(t.artistName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Track> searchTracks(@Param("keyword") String keyword, Pageable pageable);
 }

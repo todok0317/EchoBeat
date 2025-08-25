@@ -1,5 +1,6 @@
 package com.echobeat.music.service;
 
+import com.echobeat.music.dto.request.TrackSearchRequestDto;
 import com.echobeat.music.dto.response.TrackDetailResponseDto;
 import com.echobeat.music.dto.response.TrackListResponseDto;
 import com.echobeat.music.dto.response.TrackResponseDto;
@@ -43,6 +44,31 @@ public class TrackService {
             .totalPages(trackPage.getTotalPages())
             .currentPage(trackPage.getNumber())
             .hasNext(trackPage.hasNext())
+            .build();
+    }
+
+    // 트랙 검색 (제목 + 아티스트)
+    public TrackListResponseDto searchTracks(TrackSearchRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
+
+        List<Track> tracks;
+        if(requestDto.getKeyword() != null && !requestDto.getKeyword().trim().isEmpty()) {
+            tracks = trackRepository.searchTracks(requestDto.getKeyword().trim(), pageable);
+        } else {
+            // 키워드가 없으면 장르별 최신곡
+            tracks = trackRepository.findRecentTracksByGenre(
+                requestDto.getGenre() != null ? requestDto.getGenre() : Genre.KPOP, pageable
+            );
+        }
+
+        List<TrackResponseDto> trackDtos = tracks.stream()
+            .map(TrackResponseDto::from)
+            .collect(Collectors.toList());
+
+        return TrackListResponseDto.builder()
+            .tracks(trackDtos)
+            .totalElements((long) tracks.size())
+            .currentPage(requestDto.getPage())
             .build();
     }
 
