@@ -32,11 +32,12 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     // 장르별 곡 조회
     Page<Track> findByGenreOrderByCreatedAtDesc(Genre genre, Pageable pageable);
 
+    // 발매일 범위 조회
+    List<Track> findByReleaseDateBetweenOrderByReleaseDateDesc(
+        LocalDate startDate, LocalDate endDate);
+
     // 제목 + 아티스트로 중복 체크 (크롤링할 때 사용)
     Optional<Track> findByTitleAndArtistName(String title, String artistName);
-
-    // 발매일 범위로 검색
-    List<Track> findByReleaseDateBetween(LocalDate startDate, LocalDate endDate);
 
     // Apple Music ID로 찾기
     Optional<Track> findByAppleMusicId(String appleMusicId);

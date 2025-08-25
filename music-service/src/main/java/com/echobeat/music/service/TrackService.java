@@ -7,6 +7,7 @@ import com.echobeat.music.dto.response.TrackResponseDto;
 import com.echobeat.music.entity.Track;
 import com.echobeat.music.enums.Genre;
 import com.echobeat.music.repository.TrackRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -72,5 +73,13 @@ public class TrackService {
             .build();
     }
 
+    // 발매일 범위별 트랙 조회
+    public List<TrackResponseDto> getTracksByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<Track> tracks = trackRepository.findByReleaseDateBetweenOrderByReleaseDateDesc(startDate, endDate);
+
+        return tracks.stream()
+            .map(TrackResponseDto::from)
+            .collect(Collectors.toList());
+    }
 
 }

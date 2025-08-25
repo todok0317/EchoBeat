@@ -3,14 +3,18 @@ package com.echobeat.music.controller;
 import com.echobeat.music.dto.request.TrackSearchRequestDto;
 import com.echobeat.music.dto.response.TrackDetailResponseDto;
 import com.echobeat.music.dto.response.TrackListResponseDto;
+import com.echobeat.music.dto.response.TrackResponseDto;
 import com.echobeat.music.enums.Genre;
 import com.echobeat.music.service.TrackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,4 +63,16 @@ public class TrackController {
         return ResponseEntity.ok(responseDto);
     }
 
+    // 발매일 범위로 트랙 조회
+    @Operation(summary = "발매일 범위별 트랙 조회", description = "특정 기간에 발매된 트랙들을 조회합니다.")
+    @GetMapping("/data-range")
+    public ResponseEntity<List<TrackResponseDto>> getTracksByDateRange(
+        @Parameter(description = "시작 날짜")
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @Parameter(description = "종료 날짜")
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        List<TrackResponseDto> responseDtos = trackService.getTracksByDateRange(startDate, endDate);
+        return ResponseEntity.ok(responseDtos);
+    }
 }
