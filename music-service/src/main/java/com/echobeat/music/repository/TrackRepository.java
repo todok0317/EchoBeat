@@ -13,6 +13,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TrackRepository extends JpaRepository<Track, Long> {
 
+    Optional<Track> findById (Long id);
+    
+    default Track findByIdOrElseThrow (Long trackId) {
+        Track track = findById(trackId)
+            .orElseThrow(() -> new RuntimeException("존재하지 않는 트랙입니다. id: " + trackId));
+        return track;
+    }
+
     // 제목으로 검색 (대소문자 무시)
     List<Track> findByTitleContainingIgnoreCase(String title);
 
