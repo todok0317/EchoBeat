@@ -3,6 +3,7 @@ package com.echobeat.music.service;
 import com.echobeat.music.dto.response.ChartListResponseDto;
 import com.echobeat.music.dto.response.ChartResponseDto;
 import com.echobeat.music.entity.Chart;
+import com.echobeat.music.enums.Genre;
 import com.echobeat.music.repository.ChartRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +33,17 @@ public class ChartService {
             .build();
     }
 
+    // 장르별 차트 조회
+    public ChartListResponseDto getChartsByGenre(Genre genre) {
+        List<Chart> charts = chartRepository.findByGenreAndIsActiveTrueOrderByNameAsc(genre);
+        List<ChartResponseDto> chartResponseDtos = charts.stream()
+            .map(ChartResponseDto::from)
+            .collect(Collectors.toList());
 
+        return ChartListResponseDto.builder()
+            .charts(chartResponseDtos)
+            .totalCount(chartResponseDtos.size())
+            .build();
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.echobeat.music.repository;
 
 import com.echobeat.music.entity.Chart;
+import com.echobeat.music.enums.Genre;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,6 @@ public interface ChartRepository extends JpaRepository<Chart, Long> {
     // 활성화된 차트만 조회
     List<Chart> findByIsActiveTrueOrderByNameAsc();
 
+    List<Chart> findByGenreAndIsActiveTrueOrderByNameAsc(Genre genre);
 
 }
