@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TrackDetailResponseDto extends TrackResponseDto {
+public class TrackDetailResponseDto {
     private Long id;
     private String title;
     private String artistName;
@@ -23,7 +23,6 @@ public class TrackDetailResponseDto extends TrackResponseDto {
     private String spotifyId;
     private String appleMusicId;
     private String youtubeId;
-    // + 향후 차트 히스토리 정보
 
     public static TrackDetailResponseDto from(Track track) {
         return TrackDetailResponseDto.builder()
