@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Genre {
-    KPOP("K-Pop"),
-    JPOP("J-Pop"),
-    MIXED("Mixed");
+public enum ArtistType {
+    SOLO("Solo"),
+    GROUP("Group"),
+    BAND("Band"),
+    COLLABORATION("Collaboration");
 
     private final String displayName;
 }

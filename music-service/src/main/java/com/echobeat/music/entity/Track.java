@@ -1,5 +1,6 @@
 package com.echobeat.music.entity;
 
+import com.echobeat.music.enums.Genre;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
