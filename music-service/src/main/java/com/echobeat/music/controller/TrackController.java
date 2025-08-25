@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,14 +60,14 @@ public class TrackController {
     @Operation(summary = "트랙 검색", description = "제목이나 아티스트명으로 트랙을 검색합니다.")
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<TrackListResponseDto>> searchTracks(
-        @Valid @RequestBody TrackSearchRequestDto requestDto) {
+        @Valid @ModelAttribute TrackSearchRequestDto requestDto) {
         TrackListResponseDto responseDto = trackService.searchTracks(requestDto);
         return ResponseEntity.ok(ApiResponse.success("트랙 검색 완료", responseDto));
     }
 
     // 발매일 범위로 트랙 조회
     @Operation(summary = "발매일 범위별 트랙 조회", description = "특정 기간에 발매된 트랙들을 조회합니다.")
-    @GetMapping("/data-range")
+    @GetMapping("/date-range")
     public ResponseEntity<ApiResponse<List<TrackResponseDto>>> getTracksByDateRange(
         @Parameter(description = "시작 날짜")
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

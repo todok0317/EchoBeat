@@ -12,9 +12,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 
 // ChartEntry.java - 차트 엔트리 (순위 정보)
+@Getter
 @Entity
 @Table(name = "chart_entries",
     indexes = {
