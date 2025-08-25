@@ -75,4 +75,16 @@ public class TrackController {
         List<TrackResponseDto> responseDtos = trackService.getTracksByDateRange(startDate, endDate);
         return ResponseEntity.ok(responseDtos);
     }
+
+    @Operation(summary = "인기 트랙 조회", description = "특정 장르의 인기 트랙들을 조회합니다.")
+    @GetMapping("/trending")
+    public ResponseEntity<List<TrackResponseDto>> getTrendingTracks(
+        @Parameter(description = "장르") @RequestParam(defaultValue = "KPOP") Genre genre,
+        @Parameter(description = "조회할 트랙 수") @RequestParam(defaultValue = "50") int limit
+    ) {
+        List<TrackResponseDto> responseDtos = trackService.getTrendingTracks(genre, limit);
+        return ResponseEntity.ok(responseDtos);
+    }
+
+
 }
