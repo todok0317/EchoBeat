@@ -1,5 +1,6 @@
 package com.echobeat.music.controller;
 
+import com.echobeat.common.dto.ApiResponse;
 import com.echobeat.music.dto.request.TrackSearchRequestDto;
 import com.echobeat.music.dto.response.TrackDetailResponseDto;
 import com.echobeat.music.dto.response.TrackListResponseDto;
@@ -35,44 +36,70 @@ public class TrackController {
     // 트랙 상세 조회
     @Operation(summary = "트랙 상세 조회", description = "트랙 ID로 상세 정보를 조회합니다.")
     @GetMapping("/{trackId}")
-    public ResponseEntity<TrackDetailResponseDto>  getTrackDetail(
+    public ResponseEntity<ApiResponse<TrackDetailResponseDto>>  getTrackDetail(
         @Parameter(description = "트랙 ID") @PathVariable Long trackId) {
 
         TrackDetailResponseDto response = trackService.getTrackDetail(trackId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success("트랙 조회 완료", response));
     }
 
     // 장르별 트랙 조회
     @Operation(summary = "장르별 트랙 조회", description = "특정 장르의 최신 트랙들을 페이징으로 조회합니다.")
     @GetMapping("/genre/{genre}")
-    public ResponseEntity<TrackListResponseDto> getTracksByGenre(
+    public ResponseEntity<ApiResponse<TrackListResponseDto>> getTracksByGenre(
         @Parameter(description = "장르") @PathVariable Genre genre,
         @Parameter(description = "페이지 번호 (0부터 시작)") @RequestParam(defaultValue = "0") int page,
         @Parameter(description = "페이지 크기") @RequestParam(defaultValue = "30") int size
     ) {
         TrackListResponseDto responseDto = trackService.getTracksByGenre(genre, page, size);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success("장르별 트랙 조회 완료", responseDto));
     }
 
     // 트랙 검색 (제목 + 아티스트)
     @Operation(summary = "트랙 검색", description = "제목이나 아티스트명으로 트랙을 검색합니다.")
     @GetMapping("/search")
-    public ResponseEntity<TrackListResponseDto> searchTracks(
+    public ResponseEntity<ApiResponse<TrackListResponseDto>> searchTracks(
         @Valid @RequestBody TrackSearchRequestDto requestDto) {
         TrackListResponseDto responseDto = trackService.searchTracks(requestDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success("트랙 검색 완료", responseDto));
     }
 
     // 발매일 범위로 트랙 조회
     @Operation(summary = "발매일 범위별 트랙 조회", description = "특정 기간에 발매된 트랙들을 조회합니다.")
     @GetMapping("/data-range")
-    public ResponseEntity<List<TrackResponseDto>> getTracksByDateRange(
+    public ResponseEntity<ApiResponse<List<TrackResponseDto>>> getTracksByDateRange(
         @Parameter(description = "시작 날짜")
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @Parameter(description = "종료 날짜")
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         List<TrackResponseDto> responseDtos = trackService.getTracksByDateRange(startDate, endDate);
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(ApiResponse.success("기간별 트랙 조회 완료", responseDtos));
     }
+
+    @Operation(summary = "인기 트랙 조회", description = "특정 장르의 인기 트랙들을 조회합니다.")
+    @GetMapping("/trending")
+    public ResponseEntity<ApiResponse<List<TrackResponseDto>>> getTrendingTracks(
+        @Parameter(description = "장르") @RequestParam(defaultValue = "KPOP") Genre genre,
+        @Parameter(description = "조회할 트랙 수") @RequestParam(defaultValue = "50") int limit
+    ) {
+        List<TrackResponseDto> responseDtos = trackService.getTrendingTracks(genre, limit);
+        return ResponseEntity.ok(ApiResponse.success("인기 트랙 조회 완료", responseDtos));
+    }
+
+    @Operation(summary = "K-Pop 최신 트랙", description = "K-Pop 최신 트랙 20개를 조회합니다. (빠른 접근용)")
+    @GetMapping("/kpop/latest")
+    public ResponseEntity<ApiResponse<TrackListResponseDto>> getLatestKPopTracks() {
+        TrackListResponseDto response = trackService.getTracksByGenre(Genre.KPOP, 0, 20);
+        return ResponseEntity.ok(ApiResponse.success("K-Pop 최신 트랙 조회 완료", response));
+    }
+
+    @Operation(summary = "J-Pop 최신 트랙", description = "J-Pop 최신 트랙 20개를 조회합니다. (빠른 접근용)")
+    @GetMapping("/jpop/latest")
+    public ResponseEntity<ApiResponse<TrackListResponseDto>> getLatestJPopTracks() {
+        TrackListResponseDto response = trackService.getTracksByGenre(Genre.JPOP, 0, 20);
+        return ResponseEntity.ok(ApiResponse.success("J-Pop 최신 트랙 조회 완료", response));
+    }
+
+
 }

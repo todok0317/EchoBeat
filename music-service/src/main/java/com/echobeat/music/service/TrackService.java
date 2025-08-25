@@ -82,4 +82,13 @@ public class TrackService {
             .collect(Collectors.toList());
     }
 
+    public List<TrackResponseDto> getTrendingTracks(Genre genre, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Track> tracks = trackRepository.findRecentTracksByGenre(genre, pageable);
+
+        return tracks.stream()
+            .map(TrackResponseDto::from)
+            .collect(Collectors.toList());
+    }
+
 }
