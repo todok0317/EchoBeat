@@ -32,5 +32,15 @@ public interface ChartEntryRepository extends JpaRepository<ChartEntry, Long> {
     // 특정 차트의 특정 날짜 순위 조회 (순위 오름차순)
     List<ChartEntry> findByChartAndChartDateOrderByRankingAsc(Chart chart, LocalDate chartDate);
 
+    // 신규 진입곡들 조회
+    List<ChartEntry> findByChartAndChartDateAndIsNewEntryTrueOrderByRankingAsc(
+        Chart chart, LocalDate chartDate);
+
+    // 상승곡 조회 (이전 순위보다 현재 순위가 높은 곡들)
+    @Query("SELECT ce FROM ChartEntry ce WHERE ce.chart = :chart AND ce.chartDate = :chartDate " +
+        "AND ce.previousRanking IS NOT NULL AND ce.ranking < ce.previousRanking " +
+        "ORDER BY (ce.previousRanking - ce.ranking) DESC")
+    List<ChartEntry> findRisingTracks(@Param("chart") Chart chart, @Param("chartDate") LocalDate chartDate);
+
 
 }

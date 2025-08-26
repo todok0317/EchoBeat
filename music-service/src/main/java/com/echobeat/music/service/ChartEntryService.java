@@ -68,4 +68,25 @@ public class ChartEntryService {
             .build();
     }
 
+    // 신규 진입곡들 조회
+    public List<ChartEntryResponseDto> getNewEntries(Long chartId, LocalDate chartDate) {
+        Chart chart = chartRepository.findByIdOrElseThrow(chartId);
+        List<ChartEntry> entries = chartEntryRepository.findByChartAndChartDateAndIsNewEntryTrueOrderByRankingAsc(
+            chart, chartDate);
+
+        return entries.stream()
+            .map(ChartEntryResponseDto::from)
+            .collect(Collectors.toList());
+    }
+
+    // 상승곡들 조회
+    public List<ChartEntryResponseDto> getRisingTracks(Long chartId, LocalDate chartDate) {
+        Chart chart = chartRepository.findByIdOrElseThrow(chartId);
+        List<ChartEntry> entries = chartEntryRepository.findRisingTracks(chart, chartDate);
+
+        return entries.stream()
+            .map(ChartEntryResponseDto::from)
+            .collect(Collectors.toList());
+    }
+
 }
