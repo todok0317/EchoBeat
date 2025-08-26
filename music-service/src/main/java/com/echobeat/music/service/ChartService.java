@@ -46,4 +46,14 @@ public class ChartService {
             .build();
     }
 
+    // K-Pop 차트들 조회
+    public ChartListResponseDto getKPopCharts() {
+        return getChartsByGenre(Genre.KPOP);
+    }
+
+    // J-Pop 차트들 조회
+    public ChartListResponseDto getJPopCharts() {
+        return getChartsByGenre(Genre.JPOP);
+    }
+
 }
