@@ -70,7 +70,7 @@ public class ChartController {
     @GetMapping("/{chartId}/latest")
     public ResponseEntity<ApiResponse<ChartRankingResponseDto>> getLatestRanking(
         @Parameter(description = "차트 ID") @PathVariable Long chartId,
-        @Parameter(description = "Top N개만 조회 (선택사항)") @RequestBody(required = false) Integer topN
+        @Parameter(description = "Top N개만 조회 (선택사항)") @RequestParam(required = false) Integer topN
     ) {
             ChartRankingResponseDto responseDto = chartEntryService.getLatestChartRanking(chartId, topN);
             return ResponseEntity.ok(ApiResponse.success("최신 차트 순위 조회 완료", responseDto));
