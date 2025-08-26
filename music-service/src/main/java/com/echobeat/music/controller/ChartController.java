@@ -1,6 +1,7 @@
 package com.echobeat.music.controller;
 
 import com.echobeat.common.dto.ApiResponse;
+import com.echobeat.music.dto.response.ChartEntryResponseDto;
 import com.echobeat.music.dto.response.ChartListResponseDto;
 import com.echobeat.music.dto.response.ChartRankingResponseDto;
 import com.echobeat.music.enums.Genre;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -82,6 +85,32 @@ public class ChartController {
 
         ChartRankingResponseDto response = chartEntryService.getChartRankingByDate(chartId, date);
         return ResponseEntity.ok(ApiResponse.success("특정 날짜 차트 순위 조회 완료", response));
+    }
+
+    // 차트 분석 기능
+
+    @Operation(summary = "신규 진입곡", description = "특정 차트의 신규 진입곡들을 조회합니다.")
+    @GetMapping("/{chartId}/new-entries")
+    public ResponseEntity<ApiResponse<List<ChartEntryResponseDto>>> getNewEntries(
+        @Parameter(description = "차트 ID") @PathVariable Long chartId,
+        @Parameter(description = "조회할 날짜") @RequestParam(required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        LocalDate targetDate = date != null ? date : LocalDate.now();
+        List<ChartEntryResponseDto> response = chartEntryService.getNewEntries(chartId, targetDate);
+        return ResponseEntity.ok(ApiResponse.success("신규 진입곡 조회 완료", response));
+    }
+
+    @Operation(summary = "상승곡 조회", description = "특정 차트의 상승곡들을 조회합니다.")
+    @GetMapping("/{chartId}/rising")
+    public ResponseEntity<ApiResponse<List<ChartEntryResponseDto>>> getRisingTracks(
+        @Parameter(description = "차트 ID") @PathVariable Long chartId,
+        @Parameter(description = "조회할 날짜") @RequestParam(required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        LocalDate targetDate = date != null ? date : LocalDate.now();
+        List<ChartEntryResponseDto> response = chartEntryService.getRisingTracks(chartId, targetDate);
+        return ResponseEntity.ok(ApiResponse.success("상승곡 조회 완료", response));
     }
 
 }
