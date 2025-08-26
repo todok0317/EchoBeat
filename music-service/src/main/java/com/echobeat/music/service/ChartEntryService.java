@@ -50,4 +50,22 @@ public class ChartEntryService {
 
     }
 
+    // 특정 날짜의 차트 순위 조회
+    public ChartRankingResponseDto getChartRankingByDate(Long chartId, LocalDate chartDate) {
+        Chart chart = chartRepository.findByIdOrElseThrow(chartId);
+        List<ChartEntry> entries = chartEntryRepository.findByChartAndChartDateOrderByRankingAsc(
+            chart, chartDate);
+
+        List<ChartEntryResponseDto> entryDtos = entries.stream()
+            .map(ChartEntryResponseDto::from)
+            .collect(Collectors.toList());
+
+        return ChartRankingResponseDto.builder()
+            .chart(ChartResponseDto.from(chart))
+            .entries(entryDtos)
+            .chartDate(chartDate)
+            .totalEntries(entryDtos.size())
+            .build();
+    }
+
 }

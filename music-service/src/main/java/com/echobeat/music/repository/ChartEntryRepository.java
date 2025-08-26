@@ -29,4 +29,8 @@ public interface ChartEntryRepository extends JpaRepository<ChartEntry, Long> {
     @Query("SELECT MAX(ce.chartDate) FROM ChartEntry ce WHERE ce.chart = :chart")
     Optional<LocalDate> findLatestChartDate(@Param("chart") Chart chart);
 
+    // 특정 차트의 특정 날짜 순위 조회 (순위 오름차순)
+    List<ChartEntry> findByChartAndChartDateOrderByRankingAsc(Chart chart, LocalDate chartDate);
+
+
 }

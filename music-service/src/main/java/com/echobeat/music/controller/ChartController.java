@@ -9,8 +9,10 @@ import com.echobeat.music.service.ChartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +71,17 @@ public class ChartController {
     ) {
             ChartRankingResponseDto responseDto = chartEntryService.getLatestChartRanking(chartId, topN);
             return ResponseEntity.ok(ApiResponse.success("최신 차트 순위 조회 완료", responseDto));
+    }
+
+    @Operation(summary = "특정 날짜 차트 순위", description = "특정 날짜의 차트 순위를 조회합니다.")
+    @GetMapping("/{chartId}/date/{date}")
+    public ResponseEntity<ApiResponse<ChartRankingResponseDto>> getRankingByDate(
+        @Parameter(description = "차트 ID") @PathVariable Long chartId,
+        @Parameter(description = "조회할 날짜") @PathVariable
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        ChartRankingResponseDto response = chartEntryService.getChartRankingByDate(chartId, date);
+        return ResponseEntity.ok(ApiResponse.success("특정 날짜 차트 순위 조회 완료", response));
     }
 
 }
