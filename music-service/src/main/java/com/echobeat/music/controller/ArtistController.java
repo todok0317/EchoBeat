@@ -3,6 +3,7 @@ package com.echobeat.music.controller;
 import com.echobeat.common.dto.ApiResponse;
 import com.echobeat.music.dto.request.ArtistRequestDto;
 import com.echobeat.music.dto.request.ArtistSearchRequestDto;
+import com.echobeat.music.dto.request.ArtistUpdateRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
 import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
 import com.echobeat.music.enums.ArtistType;
@@ -12,7 +13,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,6 +101,42 @@ public class ArtistController {
         return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
     }
 
+    // 최근 데뷔 아티스트 조회
+    @GetMapping("/debut")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getRecentDebutArtists (
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ){
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getRecentDebutArtists(page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
 
+    // 아티스트 정보 수정
+    @PatchMapping("/update")
+    public ResponseEntity<ApiResponse<ArtistResponseDto>> updateArtist(
+        @RequestParam Long artistId,
+        @RequestBody ArtistUpdateRequestDto requestDto
+    ) {
+        ArtistResponseDto responseDto = artistService.updateArtist(artistId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
+    }
+
+    // 아티스트 비활성화
+    @PatchMapping("/delete")
+    public ResponseEntity<ApiResponse<Void>> disableArtist(
+        @RequestParam Long artistId
+    ){
+        artistService.disableArtist(artistId);
+        return ResponseEntity.ok(ApiResponse.success("비활성화 되었습니다."));
+    }
+
+    // 아티스트 활성화
+    @PatchMapping("/activate")
+    public ResponseEntity<ApiResponse<Void>> activateArtist(
+        @RequestParam Long artistId
+    ){
+        artistService.activateArtist(artistId);
+        return ResponseEntity.ok(ApiResponse.success("활성화 되었습니다."));
+    }
 
 }
