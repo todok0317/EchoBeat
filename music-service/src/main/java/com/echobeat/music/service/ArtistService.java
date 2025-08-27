@@ -151,6 +151,16 @@ public class ArtistService {
         return ArtistResponseDto.from(artist);
     }
 
+    // 아티스트 비활성화
+    @Transactional
+    public void disableArtist(Long artistId) {
+        Artist artist = artistRepository.findById(artistId)
+            .orElseThrow(() -> new IllegalArgumentException("아티스트를 찾을 수 없습니다 : " + artistId));
+
+        artist.deactivate();
+        log.info("아티스트가 비활성화되었습니다 : {} ({})", artist.getName(), artist.getId());
+    }
+
 
 
 }

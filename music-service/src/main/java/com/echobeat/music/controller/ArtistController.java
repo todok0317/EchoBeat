@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -118,6 +119,15 @@ public class ArtistController {
     ) {
         ArtistResponseDto responseDto = artistService.updateArtist(artistId, requestDto);
         return ResponseEntity.ok(ApiResponse.success(responseDto));
+    }
+
+    // 아티스트 비활성화
+    @PatchMapping("/delete")
+    public ResponseEntity<ApiResponse<Void>> disableArtist(
+        @RequestParam Long artistId
+    ){
+        artistService.disableArtist(artistId);
+        return ResponseEntity.ok(ApiResponse.success("비활성화 되었습니다."));
     }
 
 }
