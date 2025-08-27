@@ -58,6 +58,14 @@ public class ArtistService {
         return ArtistResponseDto.from(savedArtist);
     }
 
+    // 아티스트 Id로 조회
+    public ArtistResponseDto getArtistById (Long artistId) {
+        Artist artist = artistRepository.findById(artistId)
+            .orElseThrow(() -> new IllegalArgumentException("아티스트를 찾을 수 없습니다 : " + artistId));
+
+        return ArtistResponseDto.from(artist);
+    }
+
 
 
 }
