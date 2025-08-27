@@ -98,6 +98,14 @@ public class ArtistController {
         return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
     }
 
-
+    // 최근 데뷔 아티스트 조회
+    @GetMapping("/debut")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getRecentDebutArtists (
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ){
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getRecentDebutArtists(page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
 
 }

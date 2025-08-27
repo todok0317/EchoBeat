@@ -127,7 +127,12 @@ public class ArtistService {
         return artistPage.map(ArtistSummaryResponseDto::from);
     }
 
-
+    // 최근 데뷔 아티스트 조회
+    public Page<ArtistSummaryResponseDto> getRecentDebutArtists(int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Artist> artistPage = artistRepository.findByIsActiveTrueOrderByDebutDateDesc(pageable);
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
 
 
 
