@@ -28,4 +28,5 @@ public class ArtistController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
+
 }
