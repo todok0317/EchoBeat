@@ -11,13 +11,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 // Track.java - 곡 정보
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tracks")
 public class Track {
 
@@ -67,4 +73,11 @@ public class Track {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    // 메서드 추가
+    public void updateExternalIds(String spotifyId, String appleMusicId, String youtubeId) {
+        this.spotifyId = spotifyId;
+        this.appleMusicId = appleMusicId;
+        this.youtubeId = youtubeId;
+    }
 }

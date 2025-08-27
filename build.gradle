@@ -100,6 +100,18 @@ dependencies {
 
     // 프로메테우스 + Grafana
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // 웹 크롤링
+    implementation 'org.jsoup:jsoup:1.17.2'
+
+    // JSON 파싱
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // HTTP 클라이언트
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 스케줄링
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
 }
 
 tasks.named('test') {

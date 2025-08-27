@@ -5,6 +5,7 @@ import com.echobeat.music.dto.response.ChartRankingResponseDto;
 import com.echobeat.music.dto.response.ChartResponseDto;
 import com.echobeat.music.entity.Chart;
 import com.echobeat.music.entity.ChartEntry;
+import com.echobeat.music.entity.Track;
 import com.echobeat.music.repository.ChartEntryRepository;
 import com.echobeat.music.repository.ChartRepository;
 import com.echobeat.music.repository.TrackRepository;
@@ -12,8 +13,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChartEntryService {
@@ -87,6 +90,49 @@ public class ChartEntryService {
         return entries.stream()
             .map(ChartEntryResponseDto::from)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * 차트 엔트리 생성 (크롤링용)
+     */
+    public ChartEntry createChartEntry(Chart chart, Track track, Integer ranking,
+                                     LocalDate chartDate, Long playCount) {
+        
+        // 중복 체크
+        if (chartEntryRepository.existsByChartAndTrackAndChartDate(chart, track, chartDate)) {
+            log.warn("이미 존재하는 차트 엔트리: chart={}, track={}, date={}", 
+                chart.getName(), track.getTitle(), chartDate);
+            return null;
+        }
+        
+        // 이전 순위 조회 (어제 데이터가 있다면)
+        LocalDate previousDate = chartDate.minusDays(1);
+        List<ChartEntry> previousEntries = chartEntryRepository.findByChartAndChartDateOrderByRankingAsc(
+            chart, previousDate);
+        
+        Integer previousRanking = previousEntries.stream()
+            .filter(entry -> entry.getTrack().getId().equals(track.getId()))
+            .map(ChartEntry::getRanking)
+            .findFirst()
+            .orElse(null);
+        
+        // 신규 진입 여부 결정
+        boolean isNewEntry = previousRanking == null;
+        
+        ChartEntry chartEntry = ChartEntry.builder()
+            .chart(chart)
+            .track(track)
+            .ranking(ranking)
+            .previousRanking(previousRanking)
+            .chartDate(chartDate)
+            .playCount(playCount)
+            .isNewEntry(isNewEntry)
+            .build();
+        
+        ChartEntry saved = chartEntryRepository.save(chartEntry);
+        log.info("새 차트 엔트리 생성: {} - {} ({}위)", chart.getName(), track.getTitle(), ranking);
+        
+        return saved;
     }
 
 }
