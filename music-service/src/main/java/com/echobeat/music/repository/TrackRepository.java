@@ -40,4 +40,10 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
         "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
         "LOWER(t.artistName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Track> searchTracks(@Param("keyword") String keyword, Pageable pageable);
+    
+    // 제목과 아티스트명으로 트랙 찾기
+    Optional<Track> findByTitleAndArtistName(String title, String artistName);
+    
+    // Apple Music ID로 트랙 찾기
+    Optional<Track> findByAppleMusicId(String appleMusicId);
 }

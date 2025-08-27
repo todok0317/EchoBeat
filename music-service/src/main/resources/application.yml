@@ -1,9 +1,5 @@
 server:
   port: 8082
-
-spring:
-  application:
-    name: music-service
   
   datasource:
     url: jdbc:mysql://localhost:3308/echobeat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
@@ -51,3 +47,22 @@ jwt:
     key: bXlTZWNyZXRLZXlGb3JEZXZlbG9wbWVudFRoYXRTaG91bGRCZUF0TGVhc3QzMkNoYXJhY3RlcnNMb25n
   access-token-expiration: 7200000  # 2시간
   refresh-token-expiration: 1209600000  # 14일
+
+crawler:
+  user-agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  delay-ms: 1000
+  timeout-ms: 10000
+
+# Apple Music API 설정
+apple:
+  music:
+    api:
+      key: "${APPLE_MUSIC_API_KEY:}" # 환경변수로 설정
+
+# 스케줄러 활성화
+spring:
+  application:
+    name: music-service
+  task:
+    scheduling:
+      enabled: true

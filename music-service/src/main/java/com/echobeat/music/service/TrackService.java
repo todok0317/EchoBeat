@@ -9,6 +9,7 @@ import com.echobeat.music.enums.Genre;
 import com.echobeat.music.repository.TrackRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TrackService {
 
     private final TrackRepository trackRepository;
@@ -89,6 +92,51 @@ public class TrackService {
         return tracks.stream()
             .map(TrackResponseDto::from)
             .collect(Collectors.toList());
+    }
+    
+    /**
+     * 트랙 생성 또는 조회 (크롤링용)
+     */
+    @Transactional
+    public Track findOrCreateTrack(String title, String artistName, String albumName, 
+                                  String thumbnailUrl, Genre genre) {
+        // 중복 체크
+        Optional<Track> existingTrack = trackRepository.findByTitleAndArtistName(title, artistName);
+        if (existingTrack.isPresent()) {
+            log.info("기존 트랙 반환: {} - {}", title, artistName);
+            return existingTrack.get();
+        }
+        
+        // 새 트랙 생성
+        Track track = Track.builder()
+            .title(title)
+            .artistName(artistName)
+            .albumName(albumName)
+            .thumbnailUrl(thumbnailUrl)
+            .genre(genre)
+            .build();
+        
+        Track savedTrack = trackRepository.save(track);
+        log.info("새 트랙 생성: {} - {}", title, artistName);
+        
+        return savedTrack;
+    }
+    
+    /**
+     * 외부 ID 업데이트 (크롤링용)
+     */
+    @Transactional
+    public Track updateExternalIds(Long trackId, String spotifyId, String appleMusicId, String youtubeId) {
+        Track track = trackRepository.findByIdOrElseThrow(trackId);
+        track.updateExternalIds(spotifyId, appleMusicId, youtubeId);
+        return trackRepository.save(track);
+    }
+    
+    /**
+     * Apple Music ID로 트랙 찾기
+     */
+    public Optional<Track> findByAppleMusicId(String appleMusicId) {
+        return trackRepository.findByAppleMusicId(appleMusicId);
     }
 
 }

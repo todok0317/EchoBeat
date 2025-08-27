@@ -2,6 +2,7 @@ package com.echobeat.music.repository;
 
 import com.echobeat.music.entity.Chart;
 import com.echobeat.music.entity.ChartEntry;
+import com.echobeat.music.entity.Track;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,8 @@ public interface ChartEntryRepository extends JpaRepository<ChartEntry, Long> {
         "AND ce.previousRanking IS NOT NULL AND ce.ranking < ce.previousRanking " +
         "ORDER BY (ce.previousRanking - ce.ranking) DESC")
     List<ChartEntry> findRisingTracks(@Param("chart") Chart chart, @Param("chartDate") LocalDate chartDate);
-
+    
+    // 중복 체크 (크롤링용)
+    boolean existsByChartAndTrackAndChartDate(Chart chart, Track track, LocalDate chartDate);
 
 }
