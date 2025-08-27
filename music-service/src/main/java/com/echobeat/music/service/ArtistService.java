@@ -5,6 +5,8 @@ import com.echobeat.music.dto.request.ArtistSearchRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
 import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
 import com.echobeat.music.entity.Artist;
+import com.echobeat.music.enums.ArtistType;
+import com.echobeat.music.enums.Country;
 import com.echobeat.music.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +96,34 @@ public class ArtistService {
             artistPage = artistRepository.findAll(pageable);
         }
 
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+    // 모든 활성 아티스트 조회
+    public Page<ArtistSummaryResponseDto> getAllActiveArtists (int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Artist> artistPage = artistRepository.findByIsActiveTrue(pageable);
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+    // 국가별 아티스트 조회
+    public Page<ArtistSummaryResponseDto> getArtistsByCountry(Country country, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Artist> artistPage = artistRepository.findByCountryAndIsActiveTrue(country, pageable);
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+    // 아티스트 타입별 조회
+    public Page<ArtistSummaryResponseDto> getArtistsByArtistType(ArtistType artistType, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Artist> artistPage = artistRepository.findByArtistType(artistType, pageable);
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+    // 인기 아티스트 조회
+    public Page<ArtistSummaryResponseDto> getPopularArtists(int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Artist> artistPage = artistRepository.findByPopularity(pageable);
         return artistPage.map(ArtistSummaryResponseDto::from);
     }
 

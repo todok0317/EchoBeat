@@ -5,6 +5,8 @@ import com.echobeat.music.dto.request.ArtistRequestDto;
 import com.echobeat.music.dto.request.ArtistSearchRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
 import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
+import com.echobeat.music.enums.ArtistType;
+import com.echobeat.music.enums.Country;
 import com.echobeat.music.service.ArtistService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class ArtistController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
+    // 아티스트 검색
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> searchArtists (
         @RequestParam(required = false) ArtistSearchRequestDto requestDto
@@ -50,6 +53,51 @@ public class ArtistController {
         Page<ArtistSummaryResponseDto> responseDtoPage = artistService.searchArtists(requestDto);
         return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
     }
+
+    // 모든 활성 아티스트 조회
+    @GetMapping("/active")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getAllActiveArtists (
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ) {
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getAllActiveArtists(page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
+
+    // 국가별 아티스트 조회
+    @GetMapping("/country")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getArtistsByCountry (
+        @RequestParam String country,
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ){
+        Country countryEnum = Country.valueOf(country.toUpperCase());
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getArtistsByCountry(countryEnum, page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
+
+    // 아티스트 타입별 조회
+    @GetMapping("/type")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getArtistsByType(
+        @RequestParam String type,
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ){
+        ArtistType typeEnum = ArtistType.valueOf(type.toUpperCase());
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getArtistsByArtistType(typeEnum, page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
+
+    // 인기 아티스트 조회 (트랙 개수 기준)
+    @GetMapping("/popular")
+    public ResponseEntity<ApiResponse<Page<ArtistSummaryResponseDto>>> getPopularArtists (
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ) {
+        Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getPopularArtists(page, size);
+        return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
+
 
 
 }
