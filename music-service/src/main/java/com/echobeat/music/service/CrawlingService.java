@@ -35,7 +35,7 @@ public class CrawlingService {
     @PostConstruct
     private void initCrawlerMap() {
         crawlerMap = crawlers.stream()
-            .collect(Collectors.toMap(ChartCrawler::getSource, crawler -> crawler));
+            .collect(Collectors.toMap(ChartCrawler::getChartSource, crawler -> crawler));
     }
 
 
