@@ -130,4 +130,13 @@ public class ArtistController {
         return ResponseEntity.ok(ApiResponse.success("비활성화 되었습니다."));
     }
 
+    // 아티스트 활성화
+    @PatchMapping("/activate")
+    public ResponseEntity<ApiResponse<Void>> activateArtist(
+        @RequestParam Long artistId
+    ){
+        artistService.activateArtist(artistId);
+        return ResponseEntity.ok(ApiResponse.success("활성화 되었습니다."));
+    }
+
 }

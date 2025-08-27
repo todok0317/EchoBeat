@@ -161,6 +161,14 @@ public class ArtistService {
         log.info("아티스트가 비활성화되었습니다 : {} ({})", artist.getName(), artist.getId());
     }
 
+    // 아티스트 활성화
+    @Transactional
+    public void activateArtist(Long artistId) {
+        Artist artist = artistRepository.findById(artistId)
+            .orElseThrow(() -> new IllegalArgumentException("아티스트를 찾을 수 없습니다 : " + artistId));
+        artist.activate();
+        log.info("아티스트가 활성화되었습니다: {} ({})", artist.getName(), artistId);
+    }
 
 
 }
