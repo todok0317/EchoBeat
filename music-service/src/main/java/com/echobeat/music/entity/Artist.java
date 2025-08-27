@@ -2,22 +2,22 @@ package com.echobeat.music.entity;
 
 import com.echobeat.music.enums.ArtistType;
 import com.echobeat.music.enums.Country;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-// Artist.java - 아티스트 정보
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "artists")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +52,21 @@ public class Artist {
     @Column(name = "member_count")
     private Integer memberCount;       // 그룹 멤버 수
 
+    @Column(columnDefinition = "TEXT")
+    private String description;        // 아티스트 설명
+
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;   // 활동 중 여부
+
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<TrackArtist> trackArtists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Album> albums = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -59,4 +74,31 @@ public class Artist {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // 비즈니스 메서드
+    public void updateProfile(String koreanName, String japaneseName, String profileImageUrl, 
+                            String agency, String description) {
+        this.koreanName = koreanName;
+        this.japaneseName = japaneseName;
+        this.profileImageUrl = profileImageUrl;
+        this.agency = agency;
+        this.description = description;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    public void activate() {
+        this.isActive = true;
+    }
+
+    public String getDisplayName() {
+        if (koreanName != null && !koreanName.trim().isEmpty()) {
+            return koreanName;
+        } else if (japaneseName != null && !japaneseName.trim().isEmpty()) {
+            return japaneseName;
+        }
+        return name;
+    }
 }
