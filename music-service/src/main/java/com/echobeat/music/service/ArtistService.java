@@ -1,11 +1,16 @@
 package com.echobeat.music.service;
 
 import com.echobeat.music.dto.request.ArtistRequestDto;
+import com.echobeat.music.dto.request.ArtistSearchRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
+import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
 import com.echobeat.music.entity.Artist;
 import com.echobeat.music.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +70,34 @@ public class ArtistService {
 
         return ArtistResponseDto.from(artist);
     }
+
+    // 아티스트 검색 (페이징)
+    public Page<ArtistSummaryResponseDto> searchArtists (ArtistSearchRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
+        Page<Artist> artistPage;
+
+        if (requestDto.getKeyword() != null && !requestDto.getKeyword().trim().isEmpty()) {
+            artistPage = artistRepository.findByNameContaining(requestDto.getKeyword().trim(), pageable);
+        } else if (requestDto.getCountry() != null) {
+            if (requestDto.getIsActive() != null && requestDto.getIsActive()) {
+                artistPage = artistRepository.findByCountryAndIsActiveTrue(requestDto.getCountry(), pageable);
+            } else {
+                artistPage = artistRepository.findByCountry(requestDto.getCountry(), pageable);
+            }
+        } else if (requestDto.getArtistType() != null) {
+            artistPage = artistRepository.findByArtistType(requestDto.getArtistType(), pageable);
+        } else if (requestDto.getAgency() != null && !requestDto.getAgency().trim().isEmpty()) {
+            artistPage = artistRepository.findByAgencyContaining(requestDto.getAgency().trim(), pageable);
+        } else if (requestDto.getIsActive() != null && requestDto.getIsActive()) {
+            artistPage = artistRepository.findByIsActiveTrue(pageable);
+        } else {
+            artistPage = artistRepository.findAll(pageable);
+        }
+
+        return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+
 
 
 
