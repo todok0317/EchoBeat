@@ -24,7 +24,7 @@ public class CrawlingController {
 
     @Operation(summary = "전체 차트 크롤링", description = "모든 활성화된 차트를 수동으로 크롤링합니다.")
     @PostMapping("/all")
-    public ResponseEntity<ApiResponse<String>> crawlAllCharts() {
+    public ResponseEntity<ApiResponse<Void>> crawlAllCharts() {
         try {
             crawlingService.crawlAllCharts();
             return ResponseEntity.ok(ApiResponse.success("전체 차트 크롤링이 시작되었습니다."));
@@ -36,7 +36,7 @@ public class CrawlingController {
 
     @Operation(summary = "소스별 크롤링", description = "특정 소스의 차트들을 크롤링합니다.")
     @PostMapping("/source/{source}")
-    public ResponseEntity<ApiResponse<String>> crawlBySource(
+    public ResponseEntity<ApiResponse<Void>> crawlBySource(
         @Parameter(description = "차트 소스") @PathVariable ChartSource source) {
 
         try {
@@ -62,7 +62,7 @@ public class CrawlingController {
 
     @Operation(summary = "멜론 차트 크롤링", description = "멜론 실시간 차트를 수동 크롤링합니다.")
     @PostMapping("/melon")
-    public ResponseEntity<ApiResponse<String>> crawlMelon() {
+    public ResponseEntity<ApiResponse<Void>> crawlMelon() {
         try {
             crawlingService.crawlBySource(ChartSource.MELON);
             return ResponseEntity.ok(ApiResponse.success("멜론 차트 크롤링이 시작되었습니다."));
@@ -74,7 +74,7 @@ public class CrawlingController {
 
     @Operation(summary = "Apple Music 차트 크롤링", description = "Apple Music 차트를 수동 크롤링합니다.")
     @PostMapping("/apple-music")
-    public ResponseEntity<ApiResponse<String>> crawlAppleMusic() {
+    public ResponseEntity<ApiResponse<Void>> crawlAppleMusic() {
         try {
             crawlingService.crawlBySource(ChartSource.APPLE_MUSIC);
             return ResponseEntity.ok(ApiResponse.success("Apple Music 차트 크롤링이 시작되었습니다."));
