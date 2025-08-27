@@ -3,6 +3,7 @@ package com.echobeat.music.controller;
 import com.echobeat.common.dto.ApiResponse;
 import com.echobeat.music.dto.request.ArtistRequestDto;
 import com.echobeat.music.dto.request.ArtistSearchRequestDto;
+import com.echobeat.music.dto.request.ArtistUpdateRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
 import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
 import com.echobeat.music.enums.ArtistType;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -106,6 +108,16 @@ public class ArtistController {
     ){
         Page<ArtistSummaryResponseDto> responseDtoPage = artistService.getRecentDebutArtists(page, size);
         return ResponseEntity.ok(ApiResponse.success(responseDtoPage));
+    }
+
+    // 아티스트 정보 수정
+    @PatchMapping("/update")
+    public ResponseEntity<ApiResponse<ArtistResponseDto>> updateArtist(
+        @RequestParam Long artistId,
+        @RequestBody ArtistUpdateRequestDto requestDto
+    ) {
+        ArtistResponseDto responseDto = artistService.updateArtist(artistId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
 }

@@ -2,6 +2,7 @@ package com.echobeat.music.service;
 
 import com.echobeat.music.dto.request.ArtistRequestDto;
 import com.echobeat.music.dto.request.ArtistSearchRequestDto;
+import com.echobeat.music.dto.request.ArtistUpdateRequestDto;
 import com.echobeat.music.dto.response.ArtistResponseDto;
 import com.echobeat.music.dto.response.ArtistSummaryResponseDto;
 import com.echobeat.music.entity.Artist;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
@@ -132,6 +132,23 @@ public class ArtistService {
         Pageable pageable = PageRequest.of(page,size);
         Page<Artist> artistPage = artistRepository.findByIsActiveTrueOrderByDebutDateDesc(pageable);
         return artistPage.map(ArtistSummaryResponseDto::from);
+    }
+
+    // 아티스트 정보 수정
+    @Transactional
+    public ArtistResponseDto updateArtist(Long artistId, ArtistUpdateRequestDto requestDto) {
+        Artist artist = artistRepository.findById(artistId)
+            .orElseThrow(() -> new IllegalArgumentException("아티스트를 찾을 수 없습니다 : " + artistId));
+
+        artist.updateProfile(
+            requestDto.getKoreanName(),
+            requestDto.getJapaneseName(),
+            requestDto.getProfileImageUrl(),
+            requestDto.getAgency(),
+            requestDto.getDescription()
+        );
+        log.info("아티스트 정보가 수정되었습니다 : {} ({})", artist.getName(), artist.getId());
+        return ArtistResponseDto.from(artist);
     }
 
 
