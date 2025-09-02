@@ -101,4 +101,25 @@ public class Artist {
         }
         return name;
     }
+    
+    // ArtistService에서 사용하는 setter 메서드들
+    public void setArtistType(ArtistType artistType) {
+        this.artistType = artistType;
+    }
+    
+    public void setDebutDate(LocalDate debutDate) {
+        this.debutDate = debutDate;
+    }
+    
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
+    
+    public void setMemberCount(Integer memberCount) {
+        this.memberCount = memberCount;
+    }
+    
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
 }
