@@ -9,7 +9,8 @@ public enum ArtistType {
     SOLO("Solo"),
     GROUP("Group"),
     BAND("Band"),
-    COLLABORATION("Collaboration");
+    COLLABORATION("Collaboration"),
+    UNKNOWN("Unknown");
 
     private final String displayName;
 }

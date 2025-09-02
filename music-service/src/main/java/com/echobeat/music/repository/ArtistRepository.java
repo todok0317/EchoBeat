@@ -63,4 +63,9 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     boolean existsByName(String name);
     boolean existsByKoreanName(String koreanName);
     boolean existsByJapaneseName(String japaneseName);
+    
+    // ArtistService에서 사용하는 대소문자 무시 검색 메서드들
+    Optional<Artist> findByNameIgnoreCase(String name);
+    Optional<Artist> findByKoreanNameIgnoreCase(String koreanName);
+    Optional<Artist> findByJapaneseNameIgnoreCase(String japaneseName);
 }
